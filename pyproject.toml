@@ -3,7 +3,7 @@ name = "NetworkTools4QQBot"
 version = "0.1.0"
 description = "NetworkTools4QQBot"
 readme = "README.md"
-requires-python = ">=3.9, <4.0"
+requires-python = ">=3.12, <4.0"
 dependencies = [
     "nonebot2[fastapi]>=2.4.4",
     "nonebot2[websockets]>=2.4.4",
@@ -98,6 +98,6 @@ keep-runtime-typing = true
 
 [tool.pyright]
 # For Pylance/Pyright configurations, see https://microsoft.github.io/pyright/#/configuration.
-pythonVersion = "3.9"
+pythonVersion = "3.12"
 pythonPlatform = "All"
 typeCheckingMode = "standard"
