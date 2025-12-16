@@ -3,34 +3,32 @@
 
 #include <asio.hpp>
 #include <asio/experimental/awaitable_operators.hpp>
-#include <istream>
-#include <iostream>
-#include <ostream>
-#include <string_view>
-#include <string>
 #include <chrono>
+#include <iostream>
+#include <istream>
+#include <ostream>
+#include <string>
+#include <string_view>
 
 #include "icmp_header.hpp"
 #include "ipv4_header.hpp"
 #include "ipv6_header.hpp"
 
-template<class HeaderType>
-  requires std::is_same_v<HeaderType, ipv4_header> || std::is_same_v<HeaderType, ipv6_header>
-struct icmp_compose
-{
+template <class HeaderType>
+  requires std::is_same_v<HeaderType, ipv4_header> ||
+           std::is_same_v<HeaderType, ipv6_header>
+struct icmp_compose {
   HeaderType ipv4header;
   icmp_header icmpheader;
   std::size_t length;
   std::chrono::steady_clock::duration elapsed;
 };
 
-template<class HeaderType>
-  requires std::is_same_v<HeaderType, ipv4_header> || std::is_same_v<HeaderType, ipv6_header>
+template <class HeaderType>
+  requires std::is_same_v<HeaderType, ipv4_header> ||
+           std::is_same_v<HeaderType, ipv6_header>
 inline asio::awaitable<std::vector<icmp_compose<HeaderType>>>
-  async_ping(std::string_view dest,
-              int count = 3,
-              int ttl = 64)
-{
+async_ping(std::string_view dest, int count = 3, int ttl = 64) {
   using namespace asio::experimental::awaitable_operators;
 
   constexpr bool is_v4 = std::is_same_v<HeaderType, ipv4_header>;
@@ -46,7 +44,8 @@ inline asio::awaitable<std::vector<icmp_compose<HeaderType>>>
     }
   };
 
-  asio::ip::icmp::endpoint destination = *resolver.resolve(get_icmp(), dest, "").begin();
+  asio::ip::icmp::endpoint destination =
+      *resolver.resolve(get_icmp(), dest, "").begin();
   asio::ip::icmp::socket socket(executor, get_icmp());
   std::string body("\"Hello!\" from Asio ping.");
   asio::streambuf reply_buffer;
@@ -90,21 +89,23 @@ inline asio::awaitable<std::vector<icmp_compose<HeaderType>>>
     timer.expires_after(std::chrono::seconds(5));
 
     socket.async_send_to(request_buffer.data(), destination, asio::detached);
-    
+
     reply_buffer.consume(reply_buffer.size());
     auto time_sent = std::chrono::steady_clock::now();
-    auto value = co_await (socket.async_receive(reply_buffer.prepare(65536), asio::use_awaitable) ||
-                            timer.async_wait(asio::use_awaitable));
+    auto value = co_await (socket.async_receive(reply_buffer.prepare(65536),
+                                                asio::use_awaitable) ||
+                           timer.async_wait(asio::use_awaitable));
 
     auto now = std::chrono::steady_clock::now();
     auto value_ptr = std::get_if<std::size_t>(&value);
-    if (!value_ptr){
-      composes.emplace_back(HeaderType{}, icmp_header{}, 0, std::chrono::nanoseconds(0));
+    if (!value_ptr) {
+      composes.emplace_back(HeaderType{}, icmp_header{}, 0,
+                            std::chrono::nanoseconds(0));
       continue;
     }
 
     std::size_t length = *value_ptr;
-    
+
     reply_buffer.commit(length);
     std::istream is(&reply_buffer);
     HeaderType ip_hdr;
@@ -120,7 +121,8 @@ inline asio::awaitable<std::vector<icmp_compose<HeaderType>>>
           && icmp_hdr.sequence_number() == sequence_number*/)
     {
       auto elapsed = now - time_sent;
-      composes.emplace_back(std::move(ip_hdr), std::move(icmp_hdr), length, std::move(elapsed));
+      composes.emplace_back(std::move(ip_hdr), std::move(icmp_hdr), length,
+                            std::move(elapsed));
     }
   }
 
