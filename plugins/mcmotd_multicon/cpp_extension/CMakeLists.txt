@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.24)
+
+project(cpp_extension)
+
+set(CMAKE_CXX_STANDARD 23)
+
+find_package(Python3 3.12 COMPONENTS Interpreter Development REQUIRED)
+message(STATUS "Found Python3: ${Python3_EXECUTABLE} (version: ${Python3_VERSION})")
+
+add_subdirectory(pybind11)
+
+add_library(asio INTERFACE)
+target_include_directories(asio INTERFACE asio/include)
+
+pybind11_add_module(cpp_extension src/main.cpp)
+target_link_libraries(cpp_extension PRIVATE asio)
+add_custom_command(
+    TARGET cpp_extension
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:cpp_extension> ${CMAKE_CURRENT_LIST_DIR}/../
+    COMMENT "Copying the executable to the bin directory"
+    )

@@ -1,0 +1,6 @@
+[submodule "plugins/mcmotd_multicon/cpp_extension/pybind11"]
+	path = plugins/mcmotd_multicon/cpp_extension/pybind11
+	url = https://github.com/pybind/pybind11.git
+[submodule "plugins/mcmotd_multicon/cpp_extension/asio"]
+	path = plugins/mcmotd_multicon/cpp_extension/asio
+	url = https://github.com/chriskohlhoff/asio.git
