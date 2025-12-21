@@ -12,7 +12,7 @@ def pingv6(arg0: str, arg1: typing.SupportsInt | typing.SupportsIndex, arg2: typ
     """
     ping the destination in ipv6
     """
-def tcping(arg0: str, arg1: typing.SupportsInt | typing.SupportsIndex) -> dict:
+def tcping(arg0: str, arg1: typing.SupportsInt | typing.SupportsIndex, arg2: typing.SupportsInt | typing.SupportsIndex) -> dict:
     """
     tcping a host
     """

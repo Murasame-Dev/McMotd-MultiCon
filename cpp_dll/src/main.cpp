@@ -195,9 +195,9 @@ py::list tracert(const std::string &dest, int timeout) {
   return list;
 }
 
-py::dict tcping(const std::string &host, std::uint16_t port) {
+py::dict tcping(const std::string &host, std::uint16_t port, int timeout) {
   asio::io_context io_context;
-  auto future = asio::co_spawn(io_context, net::async_tcping(host, port),
+  auto future = asio::co_spawn(io_context, net::async_tcping(host, port, std::chrono::milliseconds(timeout)),
                                asio::use_future);
   io_context.run();
   if (future.wait_for(std::chrono::nanoseconds(0)) ==
