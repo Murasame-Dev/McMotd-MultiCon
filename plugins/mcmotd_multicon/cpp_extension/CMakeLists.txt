@@ -17,7 +17,7 @@ target_link_libraries(cpp_extension PRIVATE asio)
 add_custom_command(
     TARGET cpp_extension
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:cpp_extension> ${CMAKE_CURRENT_LIST_DIR}/../src/plugins/networktools4qqbot/NetworkTools
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:cpp_extension> ${CMAKE_CURRENT_LIST_DIR}/../
     COMMENT "Copying the executable to the bin directory"
     )
 
