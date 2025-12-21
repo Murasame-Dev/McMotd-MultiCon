@@ -195,9 +195,9 @@ py::list tracert(const std::string &dest, int timeout) {
   return list;
 }
 
-py::dict tcping(const std::string &host, std::uint16_t port) {
+py::dict tcping(const std::string &host, std::uint16_t port, int timeout) {
   asio::io_context io_context;
-  auto future = asio::co_spawn(io_context, net::async_tcping(host, port),
+  auto future = asio::co_spawn(io_context, net::async_tcping(host, port, std::chrono::milliseconds(timeout)),
                                asio::use_future);
   io_context.run();
   if (future.wait_for(std::chrono::nanoseconds(0)) ==
@@ -206,12 +206,16 @@ py::dict tcping(const std::string &host, std::uint16_t port) {
         make_status_dict("error", "error occurred, the task was not processed");
     return dict;
   }
-  if (auto delay = future.get(); delay.has_value()) {
+  try {
+    auto delay = future.get();
     py::dict dict = make_status_dict("success", "successfully tested");
-    dict["value"] = (*delay).count();
+    dict["value"] = delay.count();
     return dict;
-  } else {
-    py::dict dict = make_status_dict("error", delay.error());
+  } catch (const std::exception &e) {
+    py::dict dict = make_status_dict("error", e.what());
+    return dict;
+  } catch (...) {
+    py::dict dict = make_status_dict("error", "Unknown error occurred");
     return dict;
   }
 }

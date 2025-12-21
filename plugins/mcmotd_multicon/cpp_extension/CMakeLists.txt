@@ -17,6 +17,9 @@ target_link_libraries(cpp_extension PRIVATE asio)
 add_custom_command(
     TARGET cpp_extension
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:cpp_extension> ${CMAKE_CURRENT_LIST_DIR}/../
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:cpp_extension> ${CMAKE_CURRENT_LIST_DIR}/../src/plugins/networktools4qqbot/NetworkTools
     COMMENT "Copying the executable to the bin directory"
     )
+
+# 如果修改了源代码并且编译，请在.pyd/.so文件同一目录下运行此命令，并且把.pyi文件放置在.pyd/.so文件同一目录下
+# python -m pybind11_stubgen cpp_extension

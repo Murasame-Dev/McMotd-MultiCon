@@ -11,12 +11,17 @@
 #include <string>
 #include <string_view>
 
-#include "definition.hpp"
 #include "icmp_header.hpp"
 #include "ipv4_header.hpp"
 #include "ipv6_header.hpp"
 
 namespace net {
+struct use_ipv4_t {};
+struct use_ipv6_t {};
+
+inline constexpr use_ipv4_t use_ipv4;
+inline constexpr use_ipv6_t use_ipv6;
+
 template <class IPType> struct ip_token_to_header {};
 
 template <> struct ip_token_to_header<use_ipv4_t> {
