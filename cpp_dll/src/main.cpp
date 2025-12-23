@@ -83,7 +83,7 @@ py::list pingv6(const std::string &dest, int count, int ttl, int timeout) {
     list.append(make_status_dict("error", e.what()));
     return list;
   }
-  for (const auto &[_, icmp_hdr, length, elapsed] : composes) {
+  for (const auto &[ipv6_hdr, icmp_hdr, length, elapsed] : composes) {
     if (!length) {
       list.append(make_status_dict("error", "timeout"));
       continue;
@@ -91,7 +91,7 @@ py::list pingv6(const std::string &dest, int count, int ttl, int timeout) {
     py::dict dict =
         make_status_dict("success", "successfully receive the icmp package");
     dict["bytes"] = length;
-    dict["address"] = dest;
+    dict["address"] = ipv6_hdr.source_address().to_string();
     dict["icmp_seq"] = icmp_hdr.sequence_number();
     dict["time"] =
         std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();

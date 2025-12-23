@@ -120,9 +120,11 @@ async_ping(
 
     reply_buffer.consume(reply_buffer.size());
     auto time_sent = std::chrono::steady_clock::now();
-    auto value = co_await (socket.async_receive(reply_buffer.prepare(65536),
-                                                asio::use_awaitable) ||
-                           timer.async_wait(asio::use_awaitable));
+    asio::ip::icmp::endpoint sender;
+    auto value = co_await (
+      socket.async_receive_from(reply_buffer.prepare(65536), sender,
+                    asio::use_awaitable) ||
+      timer.async_wait(asio::use_awaitable));
 
     auto now = std::chrono::steady_clock::now();
     auto value_ptr = std::get_if<std::size_t>(&value);
@@ -142,6 +144,8 @@ async_ping(
       is >> ip_hdr >> icmp_hdr;
     } else {
       is >> icmp_hdr;
+      // populate ipv6 header source address from the sender endpoint
+      ip_hdr.set_source_address(sender.address().to_v6());
     }
 
     if (is/* && icmp_hdr.type() == (is_v4 ? icmp_header::echo_reply : icmp_header::v6_echo_reply)

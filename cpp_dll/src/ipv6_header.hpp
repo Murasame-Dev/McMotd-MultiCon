@@ -79,6 +79,14 @@ public:
     return asio::ip::address_v6(bytes);
   }
 
+  void set_source_address(const asio::ip::address_v6 &addr) noexcept {
+    auto bytes = addr.to_bytes();
+    for (std::size_t i = 0; i < bytes.size(); ++i)
+      rep_[8 + i] = bytes[i];
+    // ensure version is 6 in the high nibble
+    rep_[0] = static_cast<unsigned char>((6 << 4) | (rep_[0] & 0x0F));
+  }
+
   friend std::istream &operator>>(std::istream &is, ipv6_header &header) {
     is.read(reinterpret_cast<char *>(header.rep_), 40);
     if (header.version() != 6)
