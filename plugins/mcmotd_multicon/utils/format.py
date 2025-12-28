@@ -28,8 +28,10 @@ f"\n"
 f"========================\n"
 f"延迟:"
 f"{MCMOTD_CLIENT_NAME}: {latency} ms" - 本服延迟
+f"{MCMOTD_CLIENT_NAME}: {latency} ms(EXP)" - 本服延迟（启用实验性延迟检测时）
 f"\n"
 f"{server_name}: {server_latency} ms" - 其他节点延迟,有多个节点则顺位多行显示
+f"{server_name}: {server_latency} ms(EXP)" - 其他节点延迟（启用实验性延迟检测时）
 f"\n"
 
 Bedrock状态格式:
@@ -50,18 +52,24 @@ f"\n"
 f"========================\n"
 f"延迟:"
 f"{MCMOTD_CLIENT_NAME}: {latency} ms" - 本服延迟
+f"{MCMOTD_CLIENT_NAME}: {latency} ms(EXP)" - 本服延迟（启用实验性延迟检测时）
 f"\n"
 f"{server_name}: {server_latency} ms" - 其他节点延迟,有多个节点则顺位多行显示
+f"{server_name}: {server_latency} ms(EXP)" - 其他节点延迟（启用实验性延迟检测时）
 f"\n"
 """
 
 import base64
 from typing import Dict, Any, List
 from pathlib import Path
+from nonebot import get_plugin_config
 from nonebot.adapters.onebot.v11 import Message, MessageSegment
 
 from .colorcodes import remove_color_codes
 from .specialinfo import get_special_info
+from ..config import Config
+
+config = get_plugin_config(Config)
 
 def get_default_icon() -> str:
     """获取默认图标的 base64 编码"""
@@ -113,14 +121,18 @@ def format_java_status(local_result: Dict[str, Any], remote_results: List[Dict[s
     lines.append("========================")
     lines.append("延迟:")
     latency = local_result.get('latency')
+    is_exp = local_result.get('is_experimental_latency', False)
     latency_str = f"{latency:.2f} ms" if latency is not None else "超时"
-    lines.append(f"{local_name}: {latency_str}")
+    exp_mark = "(EXP)" if (config.MCMOTD_SHOW_EXPERIMENTAL_MARK and is_exp and latency is not None) else ""
+    lines.append(f"{local_name}: {latency_str}{exp_mark}")
     # 远程节点延迟
     for remote in remote_results:
         if remote.get("success"):
             remote_latency = remote['data'].get('latency')
+            remote_is_exp = remote['data'].get('is_experimental_latency', False)
             remote_latency_str = f"{remote_latency:.2f} ms" if remote_latency is not None else "超时"
-            lines.append(f"{remote['name']}: {remote_latency_str}")
+            remote_exp_mark = "(EXP)" if remote_is_exp and remote_latency is not None else ""
+            lines.append(f"{remote['name']}: {remote_latency_str}{remote_exp_mark}")
         else:
             lines.append(f"{remote['name']}: 查询失败")
     
@@ -163,14 +175,18 @@ def format_bedrock_status(local_result: Dict[str, Any], remote_results: List[Dic
     lines.append("========================")
     lines.append("延迟:")
     latency = local_result.get('latency')
+    is_exp = local_result.get('is_experimental_latency', False)
     latency_str = f"{latency:.2f} ms" if latency is not None else "超时"
-    lines.append(f"{local_name}: {latency_str}")
+    exp_mark = "(EXP)" if (config.MCMOTD_SHOW_EXPERIMENTAL_MARK and is_exp and latency is not None) else ""
+    lines.append(f"{local_name}: {latency_str}{exp_mark}")
     # 远程节点延迟
     for remote in remote_results:
         if remote.get("success"):
             remote_latency = remote['data'].get('latency')
+            remote_is_exp = remote['data'].get('is_experimental_latency', False)
             remote_latency_str = f"{remote_latency:.2f} ms" if remote_latency is not None else "超时"
-            lines.append(f"{remote['name']}: {remote_latency_str}")
+            remote_exp_mark = "(EXP)" if (config.MCMOTD_SHOW_EXPERIMENTAL_MARK and remote_is_exp and remote_latency is not None) else ""
+            lines.append(f"{remote['name']}: {remote_latency_str}{remote_exp_mark}")
         else:
             lines.append(f"{remote['name']}: 查询失败")
     

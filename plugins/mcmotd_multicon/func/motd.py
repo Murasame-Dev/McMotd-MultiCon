@@ -46,8 +46,10 @@ class Motd:
             from .networktools_cpp import entrypoint
             tcping_result = await entrypoint.tcping(address, port or 25565, timeout=3000)
             latency = tcping_result.get("avg_rtt") if tcping_result.get("status") == "success" else status.latency
+            is_experimental_latency = True
         else:
             latency = status.latency
+            is_experimental_latency = False
         
         # 提取玩家列表
         players_list = []
@@ -71,6 +73,7 @@ class Motd:
             "players_max": status.players.max,
             "players_list": players_list,
             "latency": latency,
+            "is_experimental_latency": is_experimental_latency,
             "icon": icon
         }
     
@@ -115,5 +118,6 @@ class Motd:
             "players_max": status.players.max,
             "map_name": status.map_name if hasattr(status, 'map_name') else "未知",
             "game_mode": status.gamemode if hasattr(status, 'gamemode') else "未知",
-            "latency": latency
+            "latency": latency,
+            "is_experimental_latency": False
         }

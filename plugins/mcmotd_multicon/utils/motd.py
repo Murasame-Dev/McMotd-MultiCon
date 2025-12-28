@@ -24,6 +24,7 @@ async def query_java_server(address: str | int):
             "players_max": 0,
             "players_list": [],
             "latency": None,
+            "is_experimental_latency": False,
             "icon": None,
             "error": str(e)
         }
@@ -44,5 +45,6 @@ async def query_bedrock_server(address: str | int):
             "map_name": "未知",
             "game_mode": "未知",
             "latency": None,
+            "is_experimental_latency": False,
             "error": str(e)
         }
