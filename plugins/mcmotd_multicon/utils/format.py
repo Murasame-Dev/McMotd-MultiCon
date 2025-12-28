@@ -107,11 +107,15 @@ def format_java_status(local_result: Dict[str, Any], remote_results: List[Dict[s
         lines.append(f"玩家列表: {players}")
     lines.append("========================")
     lines.append("延迟:")
-    lines.append(f"{local_name}: {local_result['latency']:.2f} ms")
+    latency = local_result.get('latency')
+    latency_str = f"{latency:.2f} ms" if latency is not None else "超时"
+    lines.append(f"{local_name}: {latency_str}")
     # 远程节点延迟
     for remote in remote_results:
         if remote.get("success"):
-            lines.append(f"{remote['name']}: {remote['data']['latency']:.2f} ms")
+            remote_latency = remote['data'].get('latency')
+            remote_latency_str = f"{remote_latency:.2f} ms" if remote_latency is not None else "超时"
+            lines.append(f"{remote['name']}: {remote_latency_str}")
         else:
             lines.append(f"{remote['name']}: 查询失败")
     
@@ -148,11 +152,15 @@ def format_bedrock_status(local_result: Dict[str, Any], remote_results: List[Dic
     lines.append(f"游戏模式: {local_result['game_mode']}")
     lines.append("========================")
     lines.append("延迟:")
-    lines.append(f"{local_name}: {local_result['latency']:.2f} ms")
+    latency = local_result.get('latency')
+    latency_str = f"{latency:.2f} ms" if latency is not None else "超时"
+    lines.append(f"{local_name}: {latency_str}")
     # 远程节点延迟
     for remote in remote_results:
         if remote.get("success"):
-            lines.append(f"{remote['name']}: {remote['data']['latency']:.2f} ms")
+            remote_latency = remote['data'].get('latency')
+            remote_latency_str = f"{remote_latency:.2f} ms" if remote_latency is not None else "超时"
+            lines.append(f"{remote['name']}: {remote_latency_str}")
         else:
             lines.append(f"{remote['name']}: 查询失败")
     
