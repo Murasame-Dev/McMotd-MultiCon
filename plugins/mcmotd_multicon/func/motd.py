@@ -4,6 +4,7 @@ McMotd Minecraft 服务器状态查询模块
 """
 
 from nonebot import get_plugin_config
+from nonebot.log import logger
 from mcstatus import JavaServer, BedrockServer
 from typing import Dict, Any
 
@@ -43,10 +44,15 @@ class Motd:
 
         # 延迟
         if config.MCMOTD_EXPERIMENTAL_LATENCY_CHECK:
-            from .networktools_cpp import entrypoint
-            tcping_result = await entrypoint.tcping(address, port or 25565, timeout=3000)
-            latency = tcping_result.get("avg_rtt") if tcping_result.get("status") == "success" else status.latency
-            is_experimental_latency = True
+            try:
+                from .networktools_cpp import entrypoint
+                tcping_result = await entrypoint.tcping(address, port or 25565, timeout=3000)
+                latency = tcping_result.get("avg_rtt") if tcping_result.get("status") == "success" else status.latency
+                is_experimental_latency = True
+            except Exception as e:
+                logger.error(f"实验性延迟检测失败 [{address}:{port or 25565}]: {type(e).__name__}: {e}")
+                latency = status.latency
+                is_experimental_latency = False
         else:
             latency = status.latency
             is_experimental_latency = False
