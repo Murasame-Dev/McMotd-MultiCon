@@ -79,6 +79,11 @@ def format_java_status(local_result: Dict[str, Any], remote_results: List[Dict[s
     """格式化 Java 服务器状态为消息文本"""
     msg = Message()
     
+    # 检查查询是否失败
+    if local_result.get("error"):
+        msg += MessageSegment.text(f"查询失败: {local_result['error']}")
+        return msg
+    
     # 服务器图标处理
     icon = local_result.get("icon")
     if icon:
@@ -132,6 +137,11 @@ def format_java_status_with_config(local_result: Dict[str, Any], remote_results:
 def format_bedrock_status(local_result: Dict[str, Any], remote_results: List[Dict[str, Any]], local_name: str, address: str = "") -> Message:
     """格式化 Bedrock 服务器状态为消息文本"""
     msg = Message()
+    
+    # 检查查询是否失败
+    if local_result.get("error"):
+        msg += MessageSegment.text(f"查询失败: {local_result['error']}")
+        return msg
     
     # 默认图标处理
     default_icon = get_default_icon()
