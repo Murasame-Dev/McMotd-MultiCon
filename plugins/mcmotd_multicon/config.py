@@ -18,5 +18,6 @@ class Config(BaseModel):
     MCMOTD_CLIENT_NAME: str = ""  # 客户端名称
     
     # 通用配置
-    MCMOTD_Server_Token: str = ""  # WebSocket 连接令牌
+    MCMOTD_SERVER_TOKEN: str = ""  # WebSocket 连接令牌
     MCMOTD_SPECIAL_INFO_SHOW: bool = False  # 是否显示不同节点的特殊信息
+    MCMOTD_QUICKQUERY_DATA_PATH: str = "data/quickquery.json"  # 快速查询数据存储路径
