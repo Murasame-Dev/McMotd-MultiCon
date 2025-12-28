@@ -101,7 +101,6 @@ def tracert(
 def tcping(
     dest: str, 
     port: int, 
-    count: int, 
     timeout: int, 
     /
 ) -> TcpingSuccessResult | TcpingErrorResult:
@@ -111,7 +110,6 @@ def tcping(
     参数:
         dest: 目标主机名或IP地址 (仅位置参数)
         port: 目标端口 (仅位置参数)
-        count: 测试次数 (仅位置参数)
         timeout: 超时时间(毫秒) (仅位置参数)
     """
     ...

@@ -10,8 +10,7 @@ import websockets
 import json
 from nonebot.log import logger
 
-from ..utils.motdjava import query_java_server
-from ..utils.motdpe import query_bedrock_server
+from ..utils.motd import query_java_server, query_bedrock_server
 
 client_status = "未连接"
 active_connections = []

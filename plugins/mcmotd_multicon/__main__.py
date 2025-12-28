@@ -38,10 +38,9 @@ from nonebot.adapters.onebot.v11.permission import GROUP_ADMIN, GROUP_OWNER
 import asyncio
 
 from .config import Config
-from .utils.motdjava import query_java_server
-from .utils.motdpe import query_bedrock_server
+from .utils.motd import query_java_server, query_bedrock_server
 from .utils.format import format_java_status_with_config, format_bedrock_status_with_config
-from .utils.quickquery import get_quick_query_manager
+from .func.quickquery import get_quick_query_manager
 from .ws.fastapi_wserver import start_server, get_connected_clients
 from .ws.wsclient import start_client, get_client_status
 

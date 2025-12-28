@@ -21,3 +21,4 @@ class Config(BaseModel):
     MCMOTD_SERVER_TOKEN: str = ""  # WebSocket 连接令牌
     MCMOTD_SPECIAL_INFO_SHOW: bool = False  # 是否显示不同节点的特殊信息
     MCMOTD_QUICKQUERY_DATA_PATH: str = "data/quickquery.json"  # 快速查询数据存储路径
+    MCMOTD_EXPERIMENTAL_LATENCY_CHECK: bool = False  # 启用实验性延迟检测功能
