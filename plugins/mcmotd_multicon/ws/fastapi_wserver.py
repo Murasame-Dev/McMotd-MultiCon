@@ -4,7 +4,7 @@
 MCMOTD_ENABLE_SERVER: bool = False
 MCMOTD_Server_Port: int
 MCMOTD_Server_STATUS_TIMEOUT: int
-MCMOTD_Server_Token: str | int = ""
+MCMOTD_SERVER_TOKEN: str | int = ""
 """
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -97,7 +97,7 @@ async def websocket_endpoint(websocket: WebSocket):
             return
         
         # 验证令牌
-        if auth_data.get("token") != server_instance.config.MCMOTD_Server_Token:
+        if auth_data.get("token") != server_instance.config.MCMOTD_SERVER_TOKEN:
             await websocket.close(code=1008, reason="令牌无效")
             return
         

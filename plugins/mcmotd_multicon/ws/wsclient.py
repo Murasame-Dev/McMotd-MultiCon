@@ -2,7 +2,7 @@
 此模块为 McMotd 的额外 Websocket 客户端,负责处理与服务器的连接请求
 MCMOTD_ENABLE_CLIENT: bool = False
 MCMOTD_CONNECT_SERVERS: list[str] = []
-MCMOTD_Server_Token: str | int = ""
+MCMOTD_SERVER_TOKEN: str | int = ""
 """
 
 import asyncio
@@ -75,7 +75,7 @@ async def connect_to_server(server_url: str, config):
             # 发送认证消息
             await websocket.send(json.dumps({
                 "type": "auth",
-                "token": config.MCMOTD_Server_Token,
+                "token": config.MCMOTD_SERVER_TOKEN,
                 "name": config.MCMOTD_CLIENT_NAME
             }))
             
