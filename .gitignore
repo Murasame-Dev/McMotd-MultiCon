@@ -5,3 +5,4 @@ build/
 .vscode/
 /plugins/mcmotd_multicon/func/networktools_cpp/__pycache__
 /plugins/mcmotd_multicon/func/__pycache__
+.env.prod
