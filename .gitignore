@@ -3,6 +3,5 @@
 /plugins/mcmotd_multicon/utils/__pycache__
 build/
 .vscode/
-*.pyd
 /plugins/mcmotd_multicon/func/networktools_cpp/__pycache__
 /plugins/mcmotd_multicon/func/__pycache__
