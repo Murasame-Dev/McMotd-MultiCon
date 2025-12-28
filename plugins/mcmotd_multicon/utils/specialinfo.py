@@ -36,12 +36,16 @@ def get_special_info(local_result: Dict[str, Any], remote_results: List[Dict[str
         remote_motd = remove_color_codes(data.get("motd", ""))
         remote_icon = data.get("icon")
         
+        # 过滤掉查询失败的情况
+        if remote_motd in ["查询失败", ""]:
+            continue
+        
         # 比较 MOTD，不同则记录
         if remote_motd != local_motd:
             motd_groups[remote_motd].append(name)
         
-        # 比较图标，不同则记录
-        if remote_icon != local_icon:
+        # 比较图标，不同则记录（过滤掉"无图标"的情况）
+        if remote_icon != local_icon and remote_icon is not None:
             icon_key = "有图标" if remote_icon else "无图标"
             icon_groups[icon_key].append(name)
     
